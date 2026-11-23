@@ -23,7 +23,7 @@ strudel-sheet-lib/
 打开 <https://strudel.cc>，把下面这段整段贴进编辑器，按 `Ctrl+Enter`：
 
 ```js
-const BASE = 'https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@main/songs/dark-song/';
+const BASE = 'https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.0/songs/dark-song/';
 const { song } = await import(BASE + 'index.js?v=1');
 $: song
 ```
@@ -41,7 +41,7 @@ hush()
 ### 通道自检
 
 ```js
-await import('https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@main/lib/health.js')
+await import('https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.0/lib/health.js')
 // { ready: true, repo: 'saxon267/Studel_LiveSet' }
 ```
 
@@ -55,16 +55,21 @@ await import('https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@main/lib/healt
 | `github.com/.../raw/main/...` | `text/plain` | `*` | ❌ 同上 |
 | `cdn.jsdelivr.net/gh/...@main/...` | `application/javascript` | `*` | ✅ |
 
-所以统一走 **jsDelivr**：`https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@main/songs/dark-song/drum.js`
+所以统一走 **jsDelivr**：`https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.0/songs/dark-song/drum.js`
 
 ## 缓存
 
-三个层次，按顺序排查：
+三层，按顺序排查：
 
 1. **浏览器模块缓存** —— 入口里的 `?v=1` 就是钥匙，改完乐谱把它加一；也可以直接写 `?v=${Date.now()}`。
-2. **jsDelivr CDN 缓存** —— 对 `@main` 是 `s-maxage=43200`（12 小时）。立刻生效的办法是刷一次：
-   `https://purge.jsdelivr.net/gh/saxon267/Studel_LiveSet@main/*`
-3. **要绝对确定** —— 把 `@main` 换成 commit sha：`https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@<sha>/...`（不可变、永久缓存）
+2. **jsDelivr CDN** —— `@main` 是「滑动引用」，jsDelivr 会缓存 12 小时，实测 purge 接口压不住它。所以对外发布固定用**标签**：本仓库钉在 `@v1.0.0`，不可变、立即生效、永久缓存。
+3. **发新版** —— 改完乐谱打个新标签，再把入口里的版本号换掉：
+
+   ```bash
+   git tag v1.0.1 && git push github main --tags
+   ```
+
+   然后 `@v1.0.0` → `@v1.0.1`，`?v=` 归 1 重新数。
 
 ## 写新歌的规矩
 

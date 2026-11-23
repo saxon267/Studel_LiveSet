@@ -11,7 +11,7 @@
 // ============================================================
 
 const BASE =
-  'https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@main/songs/dark-song/';
+  'https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.0/songs/dark-song/';
 
 const { song } = await import(BASE + 'index.js?v=1');
 
