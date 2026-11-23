@@ -20,15 +20,27 @@ strudel-sheet-lib/
 
 ## 调用指令（粘到 strudel.cc）
 
-打开 <https://strudel.cc>，把下面这段整段贴进编辑器，按 `Ctrl+Enter`：
+**① 开新会话先贴这一行**（每个会话只贴一次）
 
 ```js
-const BASE = 'https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.0/songs/dark-song/';
-const { song } = await import(BASE + 'index.js?v=1');
-$: song
+const { play } = await import('https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.1/lib/play.js')
 ```
 
-`index.js` 内部再用相对路径 import 各条轨（`./drum.js`、`./bass.js` …），浏览器顺着同一基址把整棵依赖树拉下来。
+**② 想听哪首贴哪行**
+
+```js
+$: await play('dark-song')
+```
+
+就这两步。`play(slug, v)` 的第二个参数是缓存钥匙，改完乐谱加一即可：`play('dark-song', 2)`。
+
+### 曲目
+
+| 曲目 | 指令 |
+| --- | --- |
+| Dark Song（140 BPM） | `$: await play('dark-song')` |
+
+加新曲目时，在 `songs/<slug>/` 建目录、`index.js` 导出 `song`，然后往这张表加一行。
 
 ### 停止
 
@@ -41,9 +53,11 @@ hush()
 ### 通道自检
 
 ```js
-await import('https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.0/lib/health.js')
+await import('https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.1/lib/health.js')
 // { ready: true, repo: 'saxon267/Studel_LiveSet' }
 ```
+
+`play()` 实现见 [`lib/play.js`](lib/play.js)：它从自己的 URL 里推出基址，再按 slug 去 import 对应的 `index.js`，所以整棵依赖树（`./drum.js`、`./bass.js` …）都是相对同一个基址拉下来的。
 
 ## 为什么走 jsDelivr
 
@@ -55,21 +69,21 @@ await import('https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.0/lib/hea
 | `github.com/.../raw/main/...` | `text/plain` | `*` | ❌ 同上 |
 | `cdn.jsdelivr.net/gh/...@main/...` | `application/javascript` | `*` | ✅ |
 
-所以统一走 **jsDelivr**：`https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.0/songs/dark-song/drum.js`
+所以统一走 **jsDelivr**：`https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.1/songs/dark-song/drum.js`
 
 ## 缓存
 
 三层，按顺序排查：
 
 1. **浏览器模块缓存** —— 入口里的 `?v=1` 就是钥匙，改完乐谱把它加一；也可以直接写 `?v=${Date.now()}`。
-2. **jsDelivr CDN** —— `@main` 是「滑动引用」，jsDelivr 会缓存 12 小时，实测 purge 接口压不住它。所以对外发布固定用**标签**：本仓库钉在 `@v1.0.0`，不可变、立即生效、永久缓存。
+2. **jsDelivr CDN** —— `@main` 是「滑动引用」，jsDelivr 会缓存 12 小时，实测 purge 接口压不住它。所以对外发布固定用**标签**：本仓库钉在 `@v1.0.1`，不可变、立即生效、永久缓存。
 3. **发新版** —— 改完乐谱打个新标签，再把入口里的版本号换掉：
 
    ```bash
-   git tag v1.0.1 && git push github main --tags
+   git tag v1.0.2 && git push github main --tags
    ```
 
-   然后 `@v1.0.0` → `@v1.0.1`，`?v=` 归 1 重新数。
+   然后 `@v1.0.1` → `@v1.0.2`，`?v=` 归 1 重新数。
 
 ## 写新歌的规矩
 
