@@ -1,5 +1,5 @@
 // ============================================================
-// Dark Song — SUBBASS  (subbass1)
+// Dark Step — SUBBASS  (subbass1)
 // ============================================================
 
 export const subbass1 = note(m('a a g d'))
