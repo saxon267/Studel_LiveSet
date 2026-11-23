@@ -1,0 +1,7 @@
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+
+# 本地快速通道（含内网地址，不入库）
+live/*.local.js
