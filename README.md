@@ -73,7 +73,7 @@ await import('https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.1/lib/hea
 
 ## 缓存
 
-三层，按顺序排查：
+四层，按顺序排查：
 
 1. **浏览器模块缓存** —— 入口里的 `?v=1` 就是钥匙，改完乐谱把它加一；也可以直接写 `?v=${Date.now()}`。
 2. **jsDelivr CDN** —— `@main` 是「滑动引用」，jsDelivr 会缓存 12 小时，实测 purge 接口压不住它。所以对外发布固定用**标签**：本仓库钉在 `@v1.0.1`，不可变、立即生效、永久缓存。
@@ -84,6 +84,9 @@ await import('https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.1/lib/hea
    ```
 
    然后 `@v1.0.1` → `@v1.0.2`，`?v=` 归 1 重新数。
+
+4. **刚加的新文件 404** —— jsDelivr 连 404 也会缓存。新文件第一次没取到，purge 一次即可：
+   `https://purge.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.1/lib/新文件.js`
 
 ## 写新歌的规矩
 
