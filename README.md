@@ -5,17 +5,18 @@
 ```
 strudel-sheet-lib/
 ├── songs/
-│   └── dark-step/          # 一首曲子一个目录
-│       ├── drum.js         # 鼓组 drum1
-│       ├── bass.js         # bass1 bass2
-│       ├── pad.js          # pad1
-│       ├── subbass.js      # subbass1
-│       ├── lead.js         # lead1 lead2
-│       ├── pluck.js        # pluck1
-│       ├── index.js        # 主工程：setcpm + arrange 整首
-│       └── full.js         # 单文件完整版（直接粘进 REPL）
+│   ├── dark-step/          # 一首曲子一个目录
+│   │   ├── drum.js         # 鼓组 drum1
+│   │   ├── bass.js         # bass1 bass2
+│   │   ├── pad.js          # pad1
+│   │   ├── subbass.js      # subbass1
+│   │   ├── lead.js         # lead1 lead2
+│   │   ├── pluck.js        # pluck1
+│   │   ├── index.js        # 主工程：setcpm + arrange 整首
+│   │   └── full.js         # 单文件完整版（直接粘进 REPL）
+│   └── rainbow-arrow/      # 结构同上：subbass / bass / arp / pad / drum
 ├── live/
-│   └── dark-step.js        # 粘进 strudel.cc 的入口
+│   └── *.js                # 每首曲子的入口，贴进 strudel.cc 就能放
 └── lib/
     ├── play.js             # 曲目加载器：一行播放
     └── health.js           # RAW 通道自检
@@ -26,7 +27,7 @@ strudel-sheet-lib/
 **① 开新会话先贴这一行**（每个会话只贴一次）
 
 ```js
-const { play } = await import('https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.2/lib/play.js')
+const { play } = await import('https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.3/lib/play.js')
 ```
 
 **② 想听哪首贴哪行**
@@ -41,13 +42,14 @@ $: await play('dark-step')
 
 | 曲目 | 分轨版 | 单文件版 |
 | --- | --- | --- |
-| Dark Step（140 BPM，68 循环） | `$: await play('dark-step')` | [songs/dark-step/full.js](songs/dark-step/full.js) 整段复制 |
+| Dark Step（140 BPM，68 循环） | `$: await play('dark-step')` | [songs/dark-step/full.js](songs/dark-step/full.js) |
+| Rainbow Arrow（120 BPM，5 轨同播） | `$: await play('rainbow-arrow')` | [songs/rainbow-arrow/full.js](songs/rainbow-arrow/full.js) |
 
 加新曲目时，在 `songs/<slug>/` 建目录、`index.js` 导出 `song`，然后往这张表加一行。
 
 ### 单文件版
 
-[songs/dark-step/full.js](songs/dark-step/full.js) 是整首曲子的单文件版本：不分轨、没有 import、不用先贴 `play()`，整段粘进 strudel.cc 就能放，适合快速试听或发给别人。它和分轨版内容等价，但改曲子还是建议改分轨版。
+每首曲子的 `songs/<slug>/full.js` 都是它的单文件版本：不分轨、没有 import、不用先贴 `play()`，整段粘进 strudel.cc 就能放，适合快速试听或发给别人。它和分轨版内容等价，但改曲子还是建议改分轨版。
 
 想加整曲波形：
 
@@ -66,7 +68,7 @@ hush()
 ### 通道自检
 
 ```js
-await import('https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.2/lib/health.js')
+await import('https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.3/lib/health.js')
 // { ready: true, repo: 'saxon267/Studel_LiveSet' }
 ```
 
@@ -82,24 +84,24 @@ await import('https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.2/lib/hea
 | `github.com/.../raw/main/...` | `text/plain` | `*` | ❌ 同上 |
 | `cdn.jsdelivr.net/gh/...@main/...` | `application/javascript` | `*` | ✅ |
 
-所以统一走 **jsDelivr**：`https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.2/songs/dark-step/drum.js`
+所以统一走 **jsDelivr**：`https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.3/songs/dark-step/drum.js`
 
 ## 缓存
 
 四层，按顺序排查：
 
 1. **浏览器模块缓存** —— 入口里的 `?v=1` 就是钥匙，改完乐谱把它加一；也可以直接写 `?v=${Date.now()}`。
-2. **jsDelivr CDN** —— `@main` 是「滑动引用」，jsDelivr 会缓存 12 小时，实测 purge 接口压不住它。所以对外发布固定用**标签**：本仓库钉在 `@v1.0.2`，不可变、立即生效、永久缓存。
+2. **jsDelivr CDN** —— `@main` 是「滑动引用」，jsDelivr 会缓存 12 小时，实测 purge 接口压不住它。所以对外发布固定用**标签**：本仓库钉在 `@v1.0.3`，不可变、立即生效、永久缓存。
 3. **发新版** —— 改完乐谱打个新标签，再把入口里的版本号换掉：
 
    ```bash
-   git tag v1.0.3 && git push github main --tags
+   git tag v1.0.4 && git push github main --tags
    ```
 
-   然后 `@v1.0.2` → `@v1.0.3`，`?v=` 归 1 重新数。
+   然后 `@v1.0.3` → `@v1.0.4`，`?v=` 归 1 重新数。
 
 4. **刚加的新文件 404** —— jsDelivr 连 404 也会缓存。新文件第一次没取到，purge 一次即可：
-   `https://purge.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.2/lib/新文件.js`
+   `https://purge.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.3/lib/新文件.js`
 
 ## 写新歌的规矩
 
