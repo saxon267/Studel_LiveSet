@@ -44,6 +44,7 @@ $: await play('dark-step')
 | --- | --- | --- |
 | Dark Step（140 BPM，68 循环） | `$: await play('dark-step')` | [songs/dark-step/full.js](songs/dark-step/full.js) |
 | Rainbow Arrow（120 BPM，5 轨同播） | `$: await play('rainbow-arrow')` | [songs/rainbow-arrow/full.js](songs/rainbow-arrow/full.js) |
+| Chaos-Night（120 BPM，8 轨） | `$: await play('chaos-night')` | [songs/chaos-night/full.js](songs/chaos-night/full.js) |
 
 加新曲目时，在 `songs/<slug>/` 建目录、`index.js` 导出 `song`，然后往这张表加一行。
 
