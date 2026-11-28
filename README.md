@@ -27,7 +27,7 @@ strudel-sheet-lib/
 **① 开新会话先贴这一行**（每个会话只贴一次）
 
 ```js
-const { play } = await import('https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.3/lib/play.js')
+const { play } = await import('https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.4/lib/play.js')
 ```
 
 **② 想听哪首贴哪行**
@@ -46,6 +46,7 @@ $: await play('dark-step')
 | Rainbow Arrow（120 BPM，5 轨同播） | `$: await play('rainbow-arrow')` | [songs/rainbow-arrow/full.js](songs/rainbow-arrow/full.js) |
 | Chaos-Night（120 BPM，8 轨） | `$: await play('chaos-night')` | [songs/chaos-night/full.js](songs/chaos-night/full.js) |
 | Black Drop（120 BPM，6 轨，工厂函数写法） | `$: await play('black-drop')` | [songs/black-drop/full.js](songs/black-drop/full.js) |
+| Unreal Call（120 BPM，3 轨；arp 默认静音） | `$: await play('unreal-call')` | [songs/unreal-call/full.js](songs/unreal-call/full.js) |
 
 加新曲目时，在 `songs/<slug>/` 建目录、`index.js` 导出 `song`，然后往这张表加一行。
 
@@ -70,7 +71,7 @@ hush()
 ### 通道自检
 
 ```js
-await import('https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.3/lib/health.js')
+await import('https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.4/lib/health.js')
 // { ready: true, repo: 'saxon267/Studel_LiveSet' }
 ```
 
@@ -86,24 +87,24 @@ await import('https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.3/lib/hea
 | `github.com/.../raw/main/...` | `text/plain` | `*` | ❌ 同上 |
 | `cdn.jsdelivr.net/gh/...@main/...` | `application/javascript` | `*` | ✅ |
 
-所以统一走 **jsDelivr**：`https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.3/songs/dark-step/drum.js`
+所以统一走 **jsDelivr**：`https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.4/songs/dark-step/drum.js`
 
 ## 缓存
 
 四层，按顺序排查：
 
 1. **浏览器模块缓存** —— 入口里的 `?v=1` 就是钥匙，改完乐谱把它加一；也可以直接写 `?v=${Date.now()}`。
-2. **jsDelivr CDN** —— `@main` 是「滑动引用」，jsDelivr 会缓存 12 小时，实测 purge 接口压不住它。所以对外发布固定用**标签**：本仓库钉在 `@v1.0.3`，不可变、立即生效、永久缓存。
+2. **jsDelivr CDN** —— `@main` 是「滑动引用」，jsDelivr 会缓存 12 小时，实测 purge 接口压不住它。所以对外发布固定用**标签**：本仓库钉在 `@v1.0.4`，不可变、立即生效、永久缓存。
 3. **发新版** —— 改完乐谱打个新标签，再把入口里的版本号换掉：
 
    ```bash
-   git tag v1.0.4 && git push github main --tags
+   git tag v1.0.5 && git push github main --tags
    ```
 
-   然后 `@v1.0.3` → `@v1.0.4`，`?v=` 归 1 重新数。
+   然后 `@v1.0.4` → `@v1.0.5`，`?v=` 归 1 重新数。
 
 4. **刚加的新文件 404** —— jsDelivr 连 404 也会缓存。新文件第一次没取到，purge 一次即可：
-   `https://purge.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.3/lib/新文件.js`
+   `https://purge.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.4/lib/新文件.js`
 
 ## 写新歌的规矩
 
