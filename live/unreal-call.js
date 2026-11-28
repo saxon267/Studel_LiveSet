@@ -5,10 +5,10 @@
 // ============================================================
 
 const { play } = await import(
-  'https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.4/lib/play.js'
+  'https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.5/lib/play.js'
 );
 
 $: await play('unreal-call');
 
 // 想加上 arp：
-// $: (await import('https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.4/songs/unreal-call/index.js')).withArp
+// $: (await import('https://cdn.jsdelivr.net/gh/saxon267/Studel_LiveSet@v1.0.5/songs/unreal-call/index.js')).withArp
